@@ -1,0 +1,33 @@
+# PowerShell
+*.ps1xml
+
+# Module build artifacts
+bin/
+obj/
+*.dll
+*.pdb
+
+# Test results
+TestResults/
+*.trx
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+*.tmp
+*.temp
+~*
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
