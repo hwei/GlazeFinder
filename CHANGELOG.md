@@ -7,6 +7,24 @@ All notable changes to GlazeFinder will be documented in this file.
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.1] - 2026-01-22
+
+### 修复 | Fixed
+- 修复工作区名称包含方括号时解析错误的问题
+  - Fixed workspace name parsing error when workspace names contain brackets
+- 修复无法切换到最小化窗口的问题
+  - Fixed inability to switch to minimized windows
+- 修复目标工作区存在全屏窗口时切换失败的问题
+  - Fixed switching failure when target workspace has fullscreen windows
+- 改进错误处理，显示有意义的错误信息而不是隐藏所有输出
+  - Improved error handling to show meaningful error messages instead of hiding all output
+
+### 改进 | Improved
+- 更好的解析逻辑，只移除格式化时添加的外层方括号
+  - Better parsing logic to only remove outer brackets added during formatting
+- 使用退出码检查命令执行状态
+  - Use exit codes to check command execution status
+
 ## [1.0.0] - 2026-01-22
 
 ### 新增 | Added

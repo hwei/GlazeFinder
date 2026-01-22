@@ -130,14 +130,41 @@ function Find-GlazeWindow {
     }
 
     # 4. Focus the selected workspace and window
-    try {
-        if ($targetWs -ne "Unknown") {
-            glazewm command focus --workspace $targetWs 2>&1 | Out-Null
+    if ($targetWs -ne "Unknown") {
+        $result = glazewm command focus --workspace $targetWs 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Failed to focus workspace '$targetWs': $result"
         }
-        glazewm command focus --container-id $targetId 2>&1 | Out-Null
+
+        # Check if there's a fullscreen window in the target workspace and exit fullscreen
+        $targetWorkspace = $workspaces | Where-Object { $_.name -eq $targetWs }
+        if ($targetWorkspace) {
+            $fullscreenWindow = $windows | Where-Object {
+                $_.state.type -eq "fullscreen" -and
+                ($targetWorkspace.childrenIds -contains $_.parentId -or $targetWorkspace.id -eq $_.parentId)
+            }
+            if ($fullscreenWindow) {
+                $result = glazewm command toggle-fullscreen 2>&1
+                if ($LASTEXITCODE -ne 0) {
+                    Write-Warning "Failed to exit fullscreen: $result"
+                }
+            }
+        }
     }
-    catch {
-        Write-Error "Failed to focus window: $_"
+
+    $result = glazewm command focus --container-id $targetId 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to focus window: $result"
+        return
+    }
+
+    # Check if target window is minimized and restore it if needed
+    $targetWindow = $windows | Where-Object { $_.id -eq $targetId }
+    if ($targetWindow -and $targetWindow.state.type -eq "minimized") {
+        $result = glazewm command toggle-minimized 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Failed to restore minimized window: $result"
+        }
     }
 }
 
