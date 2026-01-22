@@ -114,7 +114,14 @@ function Find-GlazeWindow {
         return
     }
 
-    $targetWs = $parts[0].Trim().Trim('[]')
+    # Extract workspace name - remove only the outer brackets we added
+    $rawWs = $parts[0].Trim()
+    if ($rawWs.StartsWith('[') -and $rawWs.EndsWith(']')) {
+        $targetWs = $rawWs.Substring(1, $rawWs.Length - 2)
+    } else {
+        $targetWs = $rawWs
+    }
+
     $targetId = $parts[3].Trim()
 
     if (-not $targetId) {
